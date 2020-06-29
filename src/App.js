@@ -1,28 +1,30 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import { observer } from 'mobx-react'
+import { inject, observer } from 'mobx-react'
+import { BrowserRouter as Router, Redirect } from 'react-router-dom'
+import Navbar from './components/Navbar';
+
 
 @observer
+@inject('clientsStore')
 class App extends Component {
+
+  componentDidMount() {
+    const { clientsStore } = this.props
+    if (clientsStore.getClients) {
+      clientsStore.getClients()
+    }
+  }
+
   render() {
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-        </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-        </a>
-        </header>
-      </div>
+      <Router>
+        <div>
+          {window.location.pathname === '/' ? <Redirect to='/clients' /> : null}
+          <Navbar />
+        </div>
+      </Router>
     );
   }
 }
